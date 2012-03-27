@@ -29,7 +29,11 @@
                         Style="{StaticResource AppBarToggleButtonStyle}" Content="&#xE104;" />
                     <Button Command="{Binding Path=SaveCommand}" 
                         Style="{StaticResource SaveAppBarButtonStyle}" 
-                        AutomationProperties.AccessKey="Control S"/>                                       
+                        AutomationProperties.AccessKey="Control S"/>
+                    <Button Command="{Binding Path=PrintCommand}"
+                            AutomationProperties.Name="Print"
+                        Style="{StaticResource AppBarButtonStyle}" 
+                        AutomationProperties.AccessKey="Control P"/>
                 </StackPanel>               
             </Grid>
 

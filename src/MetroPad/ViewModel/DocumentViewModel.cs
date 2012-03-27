@@ -41,5 +41,18 @@ namespace MetroPad.ViewModel
             get { return _StorageFile; }
             set { base.SetProperty(ref _StorageFile, value); }
         }
+
+        private string _Text;
+
+        public string Text
+        {
+            get { return _Text; }
+            set { base.SetProperty(ref _Text, value); }
+        }
+
+        public DocumentViewModel()
+        {
+            this.Text = string.Empty;
+        }
     }
 }

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using MetroPad.Common;
 using MetroPad.Input;
-using Windows.Storage;
 
 namespace MetroPad.ViewModel
 {
@@ -80,6 +74,13 @@ namespace MetroPad.ViewModel
         {
             get { return _EditCommand; }
         }
+
+        private readonly ICommand _PrintCommand;
+
+        public ICommand PrintCommand
+        {
+            get { return _PrintCommand; }
+        }
         
         #endregion
 
@@ -108,6 +109,11 @@ namespace MetroPad.ViewModel
                 CanExecuteDelegate = c => !this.SelectedDocument.IsReadOnly && this.SelectedDocument.StorageFile != null      
             };
 
+            _PrintCommand = new CommandBase
+            {
+                CanExecuteDelegate = c => this.SelectedDocument.Text.Length > 0
+            };
+
             this.StatusText = "Editing an unsaved document";
             this.SelectedDocument.IsEditing = true;
         }
@@ -122,7 +128,8 @@ namespace MetroPad.ViewModel
             if (_NewCommand == null ||
                 _EditCommand == null ||
                 _OpenCommand == null ||
-                _SaveCommand == null)
+                _SaveCommand == null ||
+                _PrintCommand == null)
             {
                 return;
             }
@@ -131,6 +138,7 @@ namespace MetroPad.ViewModel
             (_EditCommand as CommandBase).OnCanExecuteChanged();
             (_OpenCommand as CommandBase).OnCanExecuteChanged();
             (_SaveCommand as CommandBase).OnCanExecuteChanged();
+            (_PrintCommand as CommandBase).OnCanExecuteChanged();
         }
     }
 }

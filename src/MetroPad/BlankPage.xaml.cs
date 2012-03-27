@@ -7,6 +7,7 @@ using MetroPad.Input;
 using MetroPad.ViewModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -35,8 +36,19 @@ namespace MetroPad
             (App.ViewModel.OpenCommand as CommandBase).ExecuteDelegate = e => _OpenFile();
             (App.ViewModel.SaveCommand as CommandBase).ExecuteDelegate = e => _SaveFile();
             (App.ViewModel.EditCommand as CommandBase).ExecuteDelegate = e => _EditFile();
+            (App.ViewModel.PrintCommand as CommandBase).ExecuteDelegate = e => _PrintFile();
 
             this.DataContext = App.ViewModel;
+        }
+
+        private async void _PrintFile()
+        {
+            var title = App.ViewModel.SelectedDocument.StorageFile != null ? (App.ViewModel.SelectedDocument.StorageFile as StorageFile).DisplayName : "Untitled";
+
+            using (var printHelper = new PrintHelper())
+            {
+                await printHelper.PrintAsync(title, new List<UIElement> { TextEditor });
+            }
         }
 
         private void _EditFile()
@@ -195,8 +207,8 @@ namespace MetroPad
 
         private void TextEditor_TextChanged(object sender, RoutedEventArgs e)
         {
-            var currentText = _GetCurrentDocumentText();
-            App.ViewModel.SelectedDocument.HasUnsavedChanges = _BaseText != currentText;
+            App.ViewModel.SelectedDocument.Text = _GetCurrentDocumentText();
+            App.ViewModel.SelectedDocument.HasUnsavedChanges = _BaseText != App.ViewModel.SelectedDocument.Text;
         }
 
         private string _GetCurrentDocumentText()
