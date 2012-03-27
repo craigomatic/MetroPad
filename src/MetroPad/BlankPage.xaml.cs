@@ -82,7 +82,22 @@ namespace MetroPad
                 var currentText = string.Empty;
                 TextEditor.Document.GetText(Windows.UI.Text.TextGetOptions.None, out currentText);
 
-                await Windows.Storage.FileIO.WriteTextAsync(App.ViewModel.SelectedDocument.StorageFile, currentText);
+                var lines = currentText.Split('\r');
+
+                if (lines.Length > 0)
+                {
+                    using (var sw = new StreamWriter(await App.ViewModel.SelectedDocument.StorageFile.OpenStreamForWriteAsync()))
+                    {
+                        foreach (var line in lines)
+                        {
+                            await sw.WriteLineAsync(line);
+                        }
+                    }
+                }
+                else
+                {
+                    await Windows.Storage.FileIO.WriteTextAsync(App.ViewModel.SelectedDocument.StorageFile, currentText);
+                }              
 
                 //using (var stream = await App.ViewModel.SelectedDocument.StorageFile.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite))
                 //{
