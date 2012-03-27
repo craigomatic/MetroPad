@@ -22,7 +22,7 @@
       </VisualElements>
       <Extensions>
         <Extension Category="windows.fileTypeAssociation">
-          <FileTypeAssociation Name="MetroPad">
+          <FileTypeAssociation Name="documents">
             <DisplayName>MetroPad</DisplayName>
             <SupportedFileTypes>
               <FileType ContentType="text/plain">.txt</FileType>
