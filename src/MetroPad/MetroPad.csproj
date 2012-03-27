@@ -120,6 +120,7 @@
     </Compile>
     <Compile Include="Converters\EmptyStringConverter.cs" />
     <Compile Include="Converters\NullToBooleanConverter.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Input\CommandBase.cs" />
     <Compile Include="PrintHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

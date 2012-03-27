@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Input;
 using MetroPad.Input;
 using MetroPad.ViewModel;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -39,6 +40,16 @@ namespace MetroPad
             (App.ViewModel.PrintCommand as CommandBase).ExecuteDelegate = e => _PrintFile();
 
             this.DataContext = App.ViewModel;
+
+            DataTransferManager.GetForCurrentView().DataRequested += BlankPage_DataRequested;
+        }
+        
+        void BlankPage_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            var request = args.Request;
+            request.Data.Properties.Title = App.ViewModel.SelectedDocument.GetDisplayName();
+            request.Data.Properties.Description = string.Format("Created {0}", App.ViewModel.SelectedDocument.GetCreatedDate().ToString("g"));
+            request.Data.SetText(_GetCurrentDocumentText());
         }
 
         private async void _PrintFile()
