@@ -14,6 +14,7 @@ namespace MetroPad
     public class PrintHelper : IDisposable
     {
         private PrintDocument _PrintDocument;
+        private IPrintDocumentSource _PrintDocumentSource;
         private IList<UIElement> _Pages;
         private PrintManager _PrintManager;
         private string _Title;
@@ -23,6 +24,7 @@ namespace MetroPad
         public PrintHelper()
         {
             _PrintDocument = new PrintDocument();
+            _PrintDocumentSource = _PrintDocument.DocumentSource;
             _PrintDocument.AddPages += _PrintDocument_AddPages;
             _PrintDocument.Paginate += _PrintDocument_Paginate;
             _PrintDocument.GetPreviewPage += _PrintDocument_GetPreviewPage;
@@ -74,7 +76,7 @@ namespace MetroPad
 
         void _PrintManager_PrintTaskRequested(PrintManager sender, PrintTaskRequestedEventArgs args)
         {
-            var printTask = args.Request.CreatePrintTask(_Title, e => e.SetSource(_PrintDocument.DocumentSource));
+            var printTask = args.Request.CreatePrintTask(_Title, e => e.SetSource(_PrintDocumentSource));
             printTask.Completed += printTask_Completed;
         }
 
