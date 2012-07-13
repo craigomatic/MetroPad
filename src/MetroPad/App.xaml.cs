@@ -81,6 +81,8 @@ namespace MetroPad
 
             App.ViewModel.SelectedDocument = new ViewModel.DocumentViewModel { StorageFile = storageFile };
 
+            ((Window.Current.Content as Frame).Content as MainView).OpenFile(storageFile);
+
             base.OnFileActivated(args);
         }
     }

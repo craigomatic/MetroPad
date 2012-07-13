@@ -175,6 +175,11 @@ namespace MetroPad
             App.ViewModel.StatusText = App.ViewModel.SelectedDocument.IsEditing ? string.Format("Editing {0}", displayName) : string.Format("Viewing {0}", displayName);
         }
 
+        public void OpenFile(StorageFile storageFile)
+        {
+            _ReadTextFromFile(storageFile);
+        }
+
         private async void _OpenFile()
         {
             var openPicker = new FileOpenPicker();
@@ -185,33 +190,38 @@ namespace MetroPad
             var file = await openPicker.PickSingleFileAsync();
            
             if (file != null)
-            {                
-                App.ViewModel.SelectedDocument = new ViewModel.DocumentViewModel
-                {
-                    IsEditing = false,
-                    StorageFile = file,
-                    IsReadOnly = file.Attributes == Windows.Storage.FileAttributes.ReadOnly
-                };
-
-                using (var fileStream = await file.OpenReadAsync())
-                {
-                    using (var streamReader = new StreamReader(fileStream.AsStreamForRead()))
-                    {
-                        var text = await streamReader.ReadToEndAsync();
-
-                        App.ViewModel.SelectedDocument.IsEditing = true;
-                        TextEditor.Document.SetText(Windows.UI.Text.TextSetOptions.ApplyRtfDocumentDefaults, text);
-                        
-                        _BaseText = _GetCurrentDocumentText();
-                        
-                        App.ViewModel.SelectedDocument.IsEditing = false;
-                        App.ViewModel.StatusText = string.Format("Viewing {0}", file.DisplayName);
-                    }
-                }                
+            {
+                await _ReadTextFromFile(file);          
             }
             else
             {
                 
+            }
+        }
+
+        private async System.Threading.Tasks.Task _ReadTextFromFile(StorageFile file)
+        {
+            App.ViewModel.SelectedDocument = new ViewModel.DocumentViewModel
+            {
+                IsEditing = false,
+                StorageFile = file,
+                IsReadOnly = file.Attributes == Windows.Storage.FileAttributes.ReadOnly
+            };
+
+            using (var fileStream = await file.OpenReadAsync())
+            {
+                using (var streamReader = new StreamReader(fileStream.AsStreamForRead()))
+                {
+                    var text = await streamReader.ReadToEndAsync();
+
+                    App.ViewModel.SelectedDocument.IsEditing = true;
+                    TextEditor.Document.SetText(Windows.UI.Text.TextSetOptions.ApplyRtfDocumentDefaults, text);
+
+                    _BaseText = _GetCurrentDocumentText();
+
+                    App.ViewModel.SelectedDocument.IsEditing = false;
+                    App.ViewModel.StatusText = string.Format("Viewing {0}", file.DisplayName);
+                }
             }
         }
 
