@@ -56,7 +56,7 @@ namespace MetroPad
 
             // Create a Frame to act navigation context and navigate to the first page
             var rootFrame = new Frame();
-            rootFrame.Navigate(typeof(BlankPage));
+            rootFrame.Navigate(typeof(MainView));
 
             // Place the frame in the current Window and ensure that it is active
             Window.Current.Content = rootFrame;
