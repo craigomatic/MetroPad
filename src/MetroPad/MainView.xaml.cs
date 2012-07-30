@@ -16,6 +16,10 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Text;
+using Windows.UI;
+//using System.Drawing;
+//using System.Windows.Forms;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -32,6 +36,11 @@ namespace MetroPad
         {
             this.InitializeComponent();
 
+            (App.ViewModel.BoldCommand as CommandBase).ExecuteDelegate = e => _BoldText();
+            (App.ViewModel.ItalicsCommand as CommandBase).ExecuteDelegate = e => _ItalicizeText();
+            (App.ViewModel.UnderlineCommand as CommandBase).ExecuteDelegate = e => _UnderlineText();
+            (App.ViewModel.FontColourCommand as CommandBase).ExecuteDelegate = e => _FontColour();
+            (App.ViewModel.FontSelectionCommand as CommandBase).ExecuteDelegate = e => _FontSelection();
             (App.ViewModel.NewCommand as CommandBase).ExecuteDelegate = e => _NewFile();
             (App.ViewModel.OpenCommand as CommandBase).ExecuteDelegate = e => _OpenFile();
             (App.ViewModel.SaveCommand as CommandBase).ExecuteDelegate = e => _SaveFile();
@@ -41,6 +50,7 @@ namespace MetroPad
             this.DataContext = App.ViewModel;
 
             DataTransferManager.GetForCurrentView().DataRequested += BlankPage_DataRequested;
+           
         }
         
         void BlankPage_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
@@ -238,5 +248,62 @@ namespace MetroPad
             TextEditor.Document.GetText(Windows.UI.Text.TextGetOptions.None, out currentText);
             return currentText;
         }
+
+        private void GoBack(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+      
+       
+        private void _BoldText()
+        {
+                       
+            ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
+            format.Bold = FormatEffect.Toggle;
+
+
+        }
+
+        private void _ItalicizeText()
+        {
+
+            ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
+            format.Italic = FormatEffect.Toggle;
+            
+        }
+
+        private void _UnderlineText()
+        {
+            
+             ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
+             if (format.Underline == UnderlineType.None)
+             {
+                 format.Underline = UnderlineType.Single;
+             }
+             else
+             {
+                 format.Underline = UnderlineType.None;
+             }
+        }
+
+        private void _FontColour()
+        {
+          
+            TextEditor.Document.Selection.CharacterFormat.ForegroundColor = Colors.Red;
+
+               
+        }
+
+        private void _FontSelection()
+        {
+
+           
+            
+            
+           
+        }
+
+        
     }
 }
