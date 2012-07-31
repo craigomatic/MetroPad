@@ -47,6 +47,41 @@ namespace MetroPad.ViewModel
 
         #region Commands
 
+        private readonly ICommand _BoldCommand;
+
+        public ICommand BoldCommand
+        {
+            get { return _BoldCommand; }
+        }
+
+        private readonly ICommand _ItalicsCommand;
+
+        public ICommand ItalicsCommand
+        {
+            get { return _ItalicsCommand; }
+        }
+
+        private readonly ICommand _UnderlineCommand;
+
+        public ICommand UnderlineCommand
+        {
+            get { return _UnderlineCommand; }
+        }
+
+        private readonly ICommand _FontColourCommand;
+
+        public ICommand FontColourCommand
+        {
+            get { return _FontColourCommand; }
+        }
+
+        private readonly ICommand _FontSelectionCommand;
+
+        public ICommand FontSelectionCommand
+        {
+            get { return _FontSelectionCommand; }
+        }
+
         private readonly ICommand _NewCommand;
 
         public ICommand NewCommand
@@ -88,7 +123,33 @@ namespace MetroPad.ViewModel
         {
             this.Documents = new ObservableCollection<DocumentViewModel>();
             this.SelectedDocument = new DocumentViewModel();
-            
+
+            _BoldCommand = new CommandBase
+            {
+                CanExecuteDelegate = c => true
+            };
+
+            _ItalicsCommand = new CommandBase
+            {
+                CanExecuteDelegate = c => true
+            };
+
+            _UnderlineCommand = new CommandBase
+            {
+                CanExecuteDelegate = c => true
+            };
+
+            _FontColourCommand = new CommandBase
+            {
+                CanExecuteDelegate = c => true
+            };
+
+            _FontSelectionCommand = new CommandBase
+            {
+                CanExecuteDelegate = c => true
+            };
+
+
             _NewCommand = new CommandBase
             {
                 CanExecuteDelegate = c => true
