@@ -57,7 +57,9 @@
                     <Button x:Name="Underline" Style="{StaticResource AppBarButtonStyle}" Content="U" Command="{Binding Path=UnderlineCommand}"/>
                     <Button x:Name="FontColor" Style="{StaticResource AppBarButtonStyle}" Command="{Binding Path=FontColourCommand}"/>
                     <Button x:Name="FontSelection" Style="{StaticResource AppBarButtonStyle}" Command="{Binding Path=FontSelectionCommand}"/>
-               </StackPanel>
+                    <ComboBox x:Name="ComboBox1"  ItemsSource="{Binding}" Height="84" VerticalAlignment="Top" Width="120" SelectionChanged="FontSelectionChanged" Loaded="loadFonts" />
+                    <ComboBox x:Name="ComboBox2" ItemsSource="{Binding}" Height="84" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.09200000762939,0.451999992132187" Loaded="LoadColors" SelectionChanged="FontColorChanged"/>
+                </StackPanel>
             </Grid>
        
         </AppBar>

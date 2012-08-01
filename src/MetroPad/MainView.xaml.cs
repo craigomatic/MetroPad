@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.ComponentModel;
 using MetroPad.Input;
 using MetroPad.ViewModel;
 using Windows.ApplicationModel.DataTransfer;
@@ -18,6 +19,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Text;
 using Windows.UI;
+using System.Reflection;
 //using System.Drawing;
 //using System.Windows.Forms;
 
@@ -32,9 +34,16 @@ namespace MetroPad
     {
         private string _BaseText;
 
+        public List<int> Integers = new List<int>();
+
+
         public MainView()
         {
             this.InitializeComponent();
+
+
+                    
+
 
             (App.ViewModel.BoldCommand as CommandBase).ExecuteDelegate = e => _BoldText();
             (App.ViewModel.ItalicsCommand as CommandBase).ExecuteDelegate = e => _ItalicizeText();
@@ -248,34 +257,21 @@ namespace MetroPad
             TextEditor.Document.GetText(Windows.UI.Text.TextGetOptions.None, out currentText);
             return currentText;
         }
-
-        private void GoBack(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-      
-       
+                 
         private void _BoldText()
-        {
-                       
+        {                    
             ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
             format.Bold = FormatEffect.Toggle;
-
-
         }
 
         private void _ItalicizeText()
         {
-
             ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
-            format.Italic = FormatEffect.Toggle;
-            
+            format.Italic = FormatEffect.Toggle;            
         }
 
         private void _UnderlineText()
-        {
-            
+        {            
              ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
              if (format.Underline == UnderlineType.None)
              {
@@ -290,20 +286,73 @@ namespace MetroPad
         private void _FontColour()
         {
           
-            TextEditor.Document.Selection.CharacterFormat.ForegroundColor = Colors.Red;
-
-               
+            TextEditor.Document.Selection.CharacterFormat.ForegroundColor = Colors.Red;                     
         }
 
         private void _FontSelection()
-        {
-
-           
-            
-            
-           
+        {                     
+              TextEditor.FontFamily = new FontFamily("Times New Roman");                 
         }
 
+        
+      private static void LoadColors()
+        {
+
+            var t = typeof(Colors);
+            var ti = t.GetTypeInfo();
+            var dp = ti.DeclaredProperties;
+            colors = new List<PropertyInfo>();
+
+            foreach (var item in dp)
+            {
+                colors.Add(item);
+            }
+        }
+        
+        private static List<PropertyInfo> colors;
+        public List<PropertyInfo> Colors1
+        {
+            get
+            {
+                if (colors == null)
+                    LoadColors();
+                return colors;
+            }
+        }   
+       
+        private void loadFonts(object sender, RoutedEventArgs e)
+        {
+            List<string> Fonts = new List<string> { "Times New Roman", "Arial", "Verdana", "Helvetica", "Courier New" };
+            this.ComboBox1.DataContext = Fonts;
+        }
+
+        private void FontSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (ComboBox1.SelectedItem.ToString() != null)
+                    TextEditor.FontFamily = new FontFamily(ComboBox1.SelectedItem.ToString());
+            }
+            catch (Exception E)
+            {
+            }
+        }
+
+        private void LoadColors(object sender, RoutedEventArgs e)
+        {
+            this.ComboBox2.DataContext = Colors1;
+        }
+
+        private void FontColorChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComboBox2.SelectedIndex != -1)
+            {
+                var pi = ComboBox2.SelectedItem as PropertyInfo;
+                var color = (Color)pi.GetValue(null);
+                TextEditor.Document.Selection.CharacterFormat.ForegroundColor = color;
+            }
+        }
+             
         
     }
 }
