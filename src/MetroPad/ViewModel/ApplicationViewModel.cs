@@ -1,7 +1,13 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Reflection;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using MetroPad.Common;
 using MetroPad.Input;
+using Windows.UI;
+using MetroPad.Model;
 
 namespace MetroPad.ViewModel
 {
@@ -42,6 +48,10 @@ namespace MetroPad.ViewModel
         }
 
         public ObservableCollection<DocumentViewModel> Documents { get; private set; }
+
+        public IList<string> SystemFonts { get; private set; }
+
+        public IList<FontColour> SystemColours { get; private set; }
 
         #endregion
 
@@ -121,6 +131,22 @@ namespace MetroPad.ViewModel
 
         public ApplicationViewModel()
         {
+            //TODO: remove the hardcode, replace with something that gets the system fonts
+            this.SystemFonts = new List<string> { "Segoe UI", "Times New Roman", "Arial", "Verdana", "Helvetica", "Courier New" };
+            this.SystemColours = new List<FontColour>();
+
+            var ti = typeof(Colors).GetTypeInfo();
+            var dp = ti.DeclaredProperties;
+            
+            foreach (var item in dp)
+            {
+                this.SystemColours.Add(new FontColour 
+                { 
+                    Name = item.Name,
+                    Value = (Color)item.GetValue(null) 
+                });
+            }
+
             this.Documents = new ObservableCollection<DocumentViewModel>();
             this.SelectedDocument = new DocumentViewModel();
 
@@ -148,7 +174,6 @@ namespace MetroPad.ViewModel
             {
                 CanExecuteDelegate = c => true
             };
-
 
             _NewCommand = new CommandBase
             {

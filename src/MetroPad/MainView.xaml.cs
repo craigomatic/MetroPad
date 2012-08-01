@@ -20,8 +20,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Text;
 using Windows.UI;
 using System.Reflection;
-//using System.Drawing;
-//using System.Windows.Forms;
+using MetroPad.Model;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -41,10 +40,6 @@ namespace MetroPad
         {
             this.InitializeComponent();
 
-
-                    
-
-
             (App.ViewModel.BoldCommand as CommandBase).ExecuteDelegate = e => _BoldText();
             (App.ViewModel.ItalicsCommand as CommandBase).ExecuteDelegate = e => _ItalicizeText();
             (App.ViewModel.UnderlineCommand as CommandBase).ExecuteDelegate = e => _UnderlineText();
@@ -59,9 +54,8 @@ namespace MetroPad
             this.DataContext = App.ViewModel;
 
             DataTransferManager.GetForCurrentView().DataRequested += BlankPage_DataRequested;
-           
         }
-        
+
         void BlankPage_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
             var request = args.Request;
@@ -105,7 +99,7 @@ namespace MetroPad
             {
                 IsEditing = true
             };
-            
+
             TextEditor.Document.SetText(Windows.UI.Text.TextSetOptions.ApplyRtfDocumentDefaults, string.Empty);
         }
 
@@ -138,19 +132,19 @@ namespace MetroPad
                 else
                 {
                     await Windows.Storage.FileIO.WriteTextAsync(App.ViewModel.SelectedDocument.StorageFile, currentText);
-                }              
+                }
 
                 //using (var stream = await App.ViewModel.SelectedDocument.StorageFile.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite))
                 //{
                 //    Note: Seems like something is a little buggy with the SaveToStream method, it's saving the original state of the document
                 //    as opposed to the current state of the document which the GetText method above correctly retrieves
-                
+
                 //    TextEditor.Document.SaveToStream(Windows.UI.Text.TextGetOptions.None, stream);
-                
+
                 //    await stream.FlushAsync();
                 //}
             }
-            catch 
+            catch
             {
                 var dialog = new Windows.UI.Popups.MessageDialog("Unable to save the file", "Access Denied");
                 dialog.ShowAsync();
@@ -161,11 +155,11 @@ namespace MetroPad
         {
             var savePicker = new FileSavePicker();
             savePicker.DefaultFileExtension = ".txt";
-            savePicker.FileTypeChoices.Add("Plain Text", new List<string>{".txt"});
+            savePicker.FileTypeChoices.Add("Plain Text", new List<string> { ".txt" });
             savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
 
             var file = await savePicker.PickSaveFileAsync();
-            
+
             try
             {
                 using (var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite))
@@ -194,9 +188,9 @@ namespace MetroPad
             App.ViewModel.StatusText = App.ViewModel.SelectedDocument.IsEditing ? string.Format("Editing {0}", displayName) : string.Format("Viewing {0}", displayName);
         }
 
-        public void OpenFile(StorageFile storageFile)
+        public async void OpenFile(StorageFile storageFile)
         {
-            _ReadTextFromFile(storageFile);
+            await _ReadTextFromFile(storageFile);
         }
 
         private async void _OpenFile()
@@ -205,16 +199,16 @@ namespace MetroPad
             openPicker.FileTypeFilter.Add(".txt");
             openPicker.ViewMode = PickerViewMode.List;
             openPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-            
+
             var file = await openPicker.PickSingleFileAsync();
-           
+
             if (file != null)
             {
-                await _ReadTextFromFile(file);          
+                await _ReadTextFromFile(file);
             }
             else
             {
-                
+
             }
         }
 
@@ -257,9 +251,9 @@ namespace MetroPad
             TextEditor.Document.GetText(Windows.UI.Text.TextGetOptions.None, out currentText);
             return currentText;
         }
-                 
+
         private void _BoldText()
-        {                    
+        {
             ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
             format.Bold = FormatEffect.Toggle;
         }
@@ -267,92 +261,83 @@ namespace MetroPad
         private void _ItalicizeText()
         {
             ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
-            format.Italic = FormatEffect.Toggle;            
+            format.Italic = FormatEffect.Toggle;
         }
 
         private void _UnderlineText()
-        {            
-             ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
-             if (format.Underline == UnderlineType.None)
-             {
-                 format.Underline = UnderlineType.Single;
-             }
-             else
-             {
-                 format.Underline = UnderlineType.None;
-             }
+        {
+            ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
+            if (format.Underline == UnderlineType.None)
+            {
+                format.Underline = UnderlineType.Single;
+            }
+            else
+            {
+                format.Underline = UnderlineType.None;
+            }
         }
 
         private void _FontColour()
         {
-          
-            TextEditor.Document.Selection.CharacterFormat.ForegroundColor = Colors.Red;                     
+            TextEditor.Document.Selection.CharacterFormat.ForegroundColor = Colors.Red;
         }
 
         private void _FontSelection()
-        {                     
-              TextEditor.FontFamily = new FontFamily("Times New Roman");                 
+        {
+            TextEditor.FontFamily = new FontFamily("Times New Roman");
         }
 
-        
-      private static void LoadColors()
+
+        private static void _LoadColors()
         {
+            
 
             var t = typeof(Colors);
             var ti = t.GetTypeInfo();
             var dp = ti.DeclaredProperties;
-            colors = new List<PropertyInfo>();
+            _Colors = new List<PropertyInfo>();
 
             foreach (var item in dp)
             {
-                colors.Add(item);
+                _Colors.Add(item);
             }
         }
-        
-        private static List<PropertyInfo> colors;
+
+        private static List<PropertyInfo> _Colors;
+
         public List<PropertyInfo> Colors1
         {
             get
             {
-                if (colors == null)
-                    LoadColors();
-                return colors;
+                if (_Colors == null)
+                    _LoadColors();
+                return _Colors;
             }
-        }   
-       
-        private void loadFonts(object sender, RoutedEventArgs e)
-        {
-            List<string> Fonts = new List<string> { "Times New Roman", "Arial", "Verdana", "Helvetica", "Courier New" };
-            this.ComboBox1.DataContext = Fonts;
         }
 
         private void FontSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (e.AddedItems.Count == 0)
+            {
+                return;
+            }
+
             try
             {
-                if (ComboBox1.SelectedItem.ToString() != null)
-                    TextEditor.FontFamily = new FontFamily(ComboBox1.SelectedItem.ToString());
+                TextEditor.FontFamily = new FontFamily(e.AddedItems[0] as string);
             }
-            catch (Exception E)
-            {
-            }
+            catch { }
         }
 
-        private void LoadColors(object sender, RoutedEventArgs e)
-        {
-            this.ComboBox2.DataContext = Colors1;
-        }
 
         private void FontColorChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ComboBox2.SelectedIndex != -1)
+            if (e.AddedItems.Count == 0)
             {
-                var pi = ComboBox2.SelectedItem as PropertyInfo;
-                var color = (Color)pi.GetValue(null);
-                TextEditor.Document.Selection.CharacterFormat.ForegroundColor = color;
+                return;
             }
+
+            TextEditor.Document.Selection.CharacterFormat.ForegroundColor = (e.AddedItems[0] as FontColour).Value;
         }
-             
-        
     }
 }
