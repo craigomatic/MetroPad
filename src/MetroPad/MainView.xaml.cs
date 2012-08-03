@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Text;
 using Windows.UI;
 using System.Reflection;
+using Windows.Globalization.Fonts;
 //using System.Drawing;
 //using System.Windows.Forms;
 
@@ -291,7 +292,8 @@ namespace MetroPad
 
         private void _FontSelection()
         {                     
-              TextEditor.FontFamily = new FontFamily("Times New Roman");                 
+              // TextEditor.FontFamily = new FontFamily("Times New Roman");                 
+            TextEditor.Document.Selection.CharacterFormat.Name = "Times New Roman";
         }
 
         
@@ -322,8 +324,9 @@ namespace MetroPad
        
         private void loadFonts(object sender, RoutedEventArgs e)
         {
-            List<string> Fonts = new List<string> { "Times New Roman", "Arial", "Verdana", "Helvetica", "Courier New" };
-            this.ComboBox1.DataContext = Fonts;
+             List<string> Fonts = new List<string> { "Times New Roman", "Arial", "Verdana", "Helvetica", "Courier New" };
+             this.ComboBox1.DataContext = Fonts;
+            
         }
 
         private void FontSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -331,7 +334,8 @@ namespace MetroPad
             try
             {
                 if (ComboBox1.SelectedItem.ToString() != null)
-                    TextEditor.FontFamily = new FontFamily(ComboBox1.SelectedItem.ToString());
+                    // TextEditor.FontFamily = new FontFamily(ComboBox1.SelectedItem.ToString());
+                    TextEditor.Document.Selection.CharacterFormat.Name = ComboBox1.SelectedItem.ToString();
             }
             catch (Exception E)
             {
