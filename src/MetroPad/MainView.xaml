@@ -18,12 +18,74 @@
         <converters:NullToBooleanConverter x:Key="NullToBooleanConverter" />
         <common:BooleanNegationConverter x:Key="InverseBooleanConverter" />
         
+        <DataTemplate x:Key="ColourTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                
+                <Border BorderBrush="Black" BorderThickness="1" Height="16" Width="16" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Border.Background>
+                        <SolidColorBrush Color="{Binding Value}" />
+                    </Border.Background>
+                </Border>
+                <TextBlock Grid.Column="1" Text="{Binding Path=Name}" VerticalAlignment="Center" />
+            </Grid>
+        </DataTemplate>
+        
         <x:String x:Key="AppName">MetroPad</x:String>
     </Page.Resources>
-    
-<Page.TopAppBar>
+        
+    <Page.BottomAppBar>
         <AppBar Padding="10,0,10,0" IsOpen="{Binding Path=SelectedDocument.StorageFile, Converter={StaticResource NullToBooleanConverter}}">
             <Grid>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="Bold" Style="{StaticResource AppBarButtonStyle}"  Content="B" Command="{Binding Path=BoldCommand}"/>
+                    <Button x:Name="Italics" Style="{StaticResource AppBarButtonStyle}" Content="I" Command="{Binding Path=ItalicsCommand}"/>
+                    <Button x:Name="Underline" Style="{StaticResource AppBarButtonStyle}" Content="U" Command="{Binding Path=UnderlineCommand}"/>
+                    <Button x:Name="FontColor" Style="{StaticResource AppBarButtonStyle}" Command="{Binding Path=FontColourCommand}"/>
+                    <Button x:Name="FontSelection" Style="{StaticResource AppBarButtonStyle}" Command="{Binding Path=FontSelectionCommand}"/>
+                    <ComboBox x:Name="FontCombo" 
+                              Margin="5,0" 
+                              ItemsSource="{Binding SystemFonts}"                              
+                              Height="40"
+                              Width="200"
+                              SelectionChanged="FontSelectionChanged" />
+                    <ComboBox x:Name="ColourCombo" 
+                              Margin="5,0" 
+                              ItemsSource="{Binding SystemColours}"
+                              ItemTemplate="{StaticResource ColourTemplate}"
+                              Height="40" 
+                              Width="200"
+                              SelectionChanged="FontColorChanged" />
+                </StackPanel>
+            </Grid>
+       
+        </AppBar>
+    </Page.BottomAppBar>
+
+    <!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+    <Grid Style="{StaticResource LayoutRootStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Back button and page title -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
+            
+            <Grid Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,10,0">
                 <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding Path=NewCommand}"
                             AutomationProperties.AccessKey="Control N"
@@ -44,51 +106,6 @@
                         AutomationProperties.AccessKey="Control P"/>
                 </StackPanel>
             </Grid>
-
-        </AppBar>
-    </Page.TopAppBar>
-
-<Page.BottomAppBar>
-        <AppBar Padding="10,0,10,0" IsOpen="{Binding Path=SelectedDocument.StorageFile, Converter={StaticResource NullToBooleanConverter}}">
-            <Grid>
-                <StackPanel Orientation="Horizontal">
-                    <Button x:Name="Bold" Style="{StaticResource AppBarButtonStyle}"  Content="B" Command="{Binding Path=BoldCommand}"/>
-                    <Button x:Name="Italics" Style="{StaticResource AppBarButtonStyle}" Content="I" Command="{Binding Path=ItalicsCommand}"/>
-                    <Button x:Name="Underline" Style="{StaticResource AppBarButtonStyle}" Content="U" Command="{Binding Path=UnderlineCommand}"/>
-                    <Button x:Name="FontColor" Style="{StaticResource AppBarButtonStyle}" Command="{Binding Path=FontColourCommand}"/>
-                    <Button x:Name="FontSelection" Style="{StaticResource AppBarButtonStyle}" Command="{Binding Path=FontSelectionCommand}"/>
-                    <ComboBox x:Name="ComboBox1"  ItemsSource="{Binding}" Height="84" VerticalAlignment="Top" Width="120" SelectionChanged="FontSelectionChanged" Loaded="loadFonts" />
-                    <ComboBox x:Name="ComboBox2" ItemsSource="{Binding}" Height="84" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.09200000762939,0.451999992132187" Loaded="LoadColors" SelectionChanged="FontColorChanged"/>
-                </StackPanel>
-            </Grid>
-       
-        </AppBar>
-    </Page.BottomAppBar>
-
-
-
-    
-    
-    
-    <!--
-        This grid acts as a root panel for the page that defines two rows:
-        * Row 0 contains the back button and page title
-        * Row 1 contains the rest of the page layout
-    -->
-    <Grid Style="{StaticResource LayoutRootStyle}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="140"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!-- Back button and page title -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
         
         <Grid Grid.Row="1">
