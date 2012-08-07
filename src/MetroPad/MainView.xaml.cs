@@ -20,13 +20,8 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Text;
 using Windows.UI;
 using System.Reflection;
-
-
-
-
-
+using Windows.Globalization.Fonts;
 using MetroPad.Model;
-
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -260,43 +255,54 @@ namespace MetroPad
 
         private void _BoldText()
         {
-            ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
-            format.Bold = FormatEffect.Toggle;
+            try
+            {
+                ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
+                format.Bold = FormatEffect.Toggle;
+            }
+            catch(UnauthorizedAccessException e){}
         }
 
         private void _ItalicizeText()
         {
-            ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
-            format.Italic = FormatEffect.Toggle;
+            try
+            {
+                ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
+                format.Italic = FormatEffect.Toggle;
+            }
+            catch (UnauthorizedAccessException e) { }
         }
 
         private void _UnderlineText()
         {
-            ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
-            if (format.Underline == UnderlineType.None)
+            try
             {
-                format.Underline = UnderlineType.Single;
+                ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
+                if (format.Underline == UnderlineType.None)
+                {
+                    format.Underline = UnderlineType.Single;
+                }
+                else
+                {
+                    format.Underline = UnderlineType.None;
+                }
             }
-            else
-            {
-                format.Underline = UnderlineType.None;
-            }
+            catch (UnauthorizedAccessException e) { }
         }
 
         private void _FontColour()
         {
-            TextEditor.Document.Selection.CharacterFormat.ForegroundColor = Colors.Red;
+            try
+            {
+                TextEditor.Document.Selection.CharacterFormat.ForegroundColor = Colors.Black;
+            }
+            catch { }
         }
 
         private void _FontSelection()
 
-
-
-
-
         {
-            TextEditor.FontFamily = new FontFamily("Times New Roman");
-
+            TextEditor.FontFamily = new FontFamily("Segoe UI");           
         }
 
 
@@ -325,34 +331,18 @@ namespace MetroPad
                     _LoadColors();
                 return _Colors;
             }
-
-        }   
-       
-
-
-
-
-
-
-
         }
 
         private void FontSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0)
             {
-
-
-
-
-
                 return;
-
             }
 
             try
             {
-                TextEditor.FontFamily = new FontFamily(e.AddedItems[0] as string);
+                 TextEditor.FontFamily = new FontFamily((e.AddedItems[0] as FontSelection).Name);                               
             }
             catch { }
         }
@@ -365,7 +355,11 @@ namespace MetroPad
                 return;
             }
 
-            TextEditor.Document.Selection.CharacterFormat.ForegroundColor = (e.AddedItems[0] as FontColour).Value;
+            try
+            {
+                TextEditor.Document.Selection.CharacterFormat.ForegroundColor = (e.AddedItems[0] as FontColour).Value;
+            }
+            catch { }
         }
     }
 }

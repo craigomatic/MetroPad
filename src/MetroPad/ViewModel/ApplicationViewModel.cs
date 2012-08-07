@@ -49,7 +49,7 @@ namespace MetroPad.ViewModel
 
         public ObservableCollection<DocumentViewModel> Documents { get; private set; }
 
-        public IList<string> SystemFonts { get; private set; }
+        public IList<FontSelection> SystemFonts { get; private set; }
 
         public IList<FontColour> SystemColours { get; private set; }
 
@@ -132,7 +132,17 @@ namespace MetroPad.ViewModel
         public ApplicationViewModel()
         {
             //TODO: remove the hardcode, replace with something that gets the system fonts
-            this.SystemFonts = new List<string> { "Segoe UI", "Times New Roman", "Arial", "Verdana", "Helvetica", "Courier New" };
+            // this.SystemFonts = new List<string>() { "Segoe UI", "Times New Roman", "Arial", "Verdana", "Helvetica", "Courier New" };
+            var list = new List<string>() { "Segoe UI", "Times New Roman", "Arial", "Verdana", "Helvetica", "Courier New" };
+            this.SystemFonts = new List<FontSelection>();
+
+            for(int i=0;i<6;i++)
+            {
+                this.SystemFonts.Add(new FontSelection
+                {
+                    Name = list[i]
+            });
+        }
             this.SystemColours = new List<FontColour>();
 
             var ti = typeof(Colors).GetTypeInfo();
