@@ -22,6 +22,9 @@ using Windows.UI;
 using System.Reflection;
 using Windows.Globalization.Fonts;
 using MetroPad.Model;
+using WindowsRuntimeComponent1;
+
+
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -33,7 +36,7 @@ namespace MetroPad
     public sealed partial class MainView : MetroPad.Common.LayoutAwarePage
     {
         private string _BaseText;
-
+        
         public List<int> Integers = new List<int>();
 
 
@@ -260,7 +263,10 @@ namespace MetroPad
                 ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
                 format.Bold = FormatEffect.Toggle;
             }
-            catch(UnauthorizedAccessException e){}
+            catch(UnauthorizedAccessException e){
+                var dialog = new Windows.UI.Popups.MessageDialog(e.Message+"\nClick on Edit before editing the document");
+                dialog.ShowAsync();
+            }
         }
 
         private void _ItalicizeText()
@@ -270,7 +276,11 @@ namespace MetroPad
                 ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
                 format.Italic = FormatEffect.Toggle;
             }
-            catch (UnauthorizedAccessException e) { }
+            catch (UnauthorizedAccessException e)
+            {
+                var dialog = new Windows.UI.Popups.MessageDialog(e.Message+"\nClick on Edit before editing the document");
+                dialog.ShowAsync();
+            }
         }
 
         private void _UnderlineText()
@@ -287,7 +297,11 @@ namespace MetroPad
                     format.Underline = UnderlineType.None;
                 }
             }
-            catch (UnauthorizedAccessException e) { }
+            catch (UnauthorizedAccessException e)
+            {
+                var dialog = new Windows.UI.Popups.MessageDialog(e.Message+"\nClick on Edit before editing the document");
+                dialog.ShowAsync();
+            }
         }
 
         private void _FontColour()
@@ -296,42 +310,19 @@ namespace MetroPad
             {
                 TextEditor.Document.Selection.CharacterFormat.ForegroundColor = Colors.Black;
             }
-            catch { }
+            catch (UnauthorizedAccessException e)
+            {
+                var dialog = new Windows.UI.Popups.MessageDialog(e.Message+"\nClick on Edit before editing the document");
+                dialog.ShowAsync();
+            }
         }
 
         private void _FontSelection()
-
         {
-            TextEditor.FontFamily = new FontFamily("Segoe UI");           
-        }
-
-
-        private static void _LoadColors()
-        {
+            TextEditor.FontFamily = new FontFamily("Segoe UI");
+        } 
             
-
-            var t = typeof(Colors);
-            var ti = t.GetTypeInfo();
-            var dp = ti.DeclaredProperties;
-            _Colors = new List<PropertyInfo>();
-
-            foreach (var item in dp)
-            {
-                _Colors.Add(item);
-            }
-        }
-
-        private static List<PropertyInfo> _Colors;
-
-        public List<PropertyInfo> Colors1
-        {
-            get
-            {
-                if (_Colors == null)
-                    _LoadColors();
-                return _Colors;
-            }
-        }
+                     
 
         private void FontSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -344,7 +335,11 @@ namespace MetroPad
             {
                  TextEditor.FontFamily = new FontFamily((e.AddedItems[0] as FontSelection).Name);                               
             }
-            catch { }
+            catch (UnauthorizedAccessException Ex)
+            {
+                var dialog = new Windows.UI.Popups.MessageDialog(Ex.Message+"\nClick on Edit before editing the document");
+                dialog.ShowAsync();
+            }
         }
 
 
@@ -359,7 +354,11 @@ namespace MetroPad
             {
                 TextEditor.Document.Selection.CharacterFormat.ForegroundColor = (e.AddedItems[0] as FontColour).Value;
             }
-            catch { }
+            catch (UnauthorizedAccessException Ex)
+            {
+                var dialog = new Windows.UI.Popups.MessageDialog(Ex.Message+"\nClick on Edit before editing the document");
+                dialog.ShowAsync();
+            }
         }
     }
 }

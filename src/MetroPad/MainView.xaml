@@ -34,8 +34,16 @@
             </Grid>
         </DataTemplate>
         
-        <DataTemplate x:Key="FontTemplate">            
-                <TextBlock  Text="{Binding Path=Name}" VerticalAlignment="Center" />            
+        <DataTemplate x:Key="FontTemplate">  
+<Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock  Text="{Binding Path=Name}" FontFamily ="{Binding Value}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <TextBlock Grid.Column="1" Text="{Binding Path=Name}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            </Grid>                          
         </DataTemplate>
         
         <x:String x:Key="AppName">MetroPad</x:String>
@@ -51,14 +59,14 @@
                     <Button x:Name="FontColor" Style="{StaticResource AppBarButtonStyle}" Command="{Binding Path=FontColourCommand}"/>
                     <Button x:Name="FontSelection" Style="{StaticResource AppBarButtonStyle}" Command="{Binding Path=FontSelectionCommand}"/>
                     <ComboBox x:Name="FontCombo" 
-                              Margin="5,0" 
+                              Margin="5,22" 
                               ItemsSource="{Binding SystemFonts}"                              
                               ItemTemplate="{StaticResource FontTemplate}"
                               Height="40"
-                              Width="200"
+                              Width="329"
                               SelectionChanged="FontSelectionChanged" />
                     <ComboBox x:Name="ColourCombo" 
-                              Margin="5,0" 
+                              Margin="5,22" 
                               ItemsSource="{Binding SystemColours}"
                               ItemTemplate="{StaticResource ColourTemplate}"
                               Height="40" 
