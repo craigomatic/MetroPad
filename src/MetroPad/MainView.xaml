@@ -34,6 +34,18 @@
             </Grid>
         </DataTemplate>
         
+        <DataTemplate x:Key="FontTemplate">  
+<Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock  Text="{Binding Path=Name}" FontFamily ="{Binding Value}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <TextBlock Grid.Column="1" Text="{Binding Path=Name}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            </Grid>                          
+        </DataTemplate>
+        
         <x:String x:Key="AppName">MetroPad</x:String>
     </Page.Resources>
         
@@ -47,13 +59,14 @@
                     <Button x:Name="FontColor" Style="{StaticResource AppBarButtonStyle}" Command="{Binding Path=FontColourCommand}"/>
                     <Button x:Name="FontSelection" Style="{StaticResource AppBarButtonStyle}" Command="{Binding Path=FontSelectionCommand}"/>
                     <ComboBox x:Name="FontCombo" 
-                              Margin="5,0" 
+                              Margin="5,22" 
                               ItemsSource="{Binding SystemFonts}"                              
+                              ItemTemplate="{StaticResource FontTemplate}"
                               Height="40"
-                              Width="200"
+                              Width="329"
                               SelectionChanged="FontSelectionChanged" />
                     <ComboBox x:Name="ColourCombo" 
-                              Margin="5,0" 
+                              Margin="5,22" 
                               ItemsSource="{Binding SystemColours}"
                               ItemTemplate="{StaticResource ColourTemplate}"
                               Height="40" 
@@ -115,7 +128,7 @@
             </Grid.RowDefinitions>
 
 
-            <RichEditBox x:Name="TextEditor"  TextChanged="TextEditor_TextChanged" IsReadOnly="{Binding Path=SelectedDocument.IsEditing, Converter={StaticResource InverseBooleanConverter}}" />
+            <RichEditBox x:Name="TextEditor"  TextChanged="TextEditor_TextChanged" IsReadOnly="{Binding Path=SelectedDocument.IsEditing, Converter={StaticResource InverseBooleanConverter}}" IsEnabled="{Binding Path=SelectedDocument.IsEditing}"  FontFamily="Segoe UI" Foreground="Black"/>
 
             <Border Grid.Row="1" Background="Black" Margin="0,10,0,-10">
                 <TextBlock x:Name="tblock" Text="{Binding Path=StatusText}" Foreground="White" Margin="12,5"/>

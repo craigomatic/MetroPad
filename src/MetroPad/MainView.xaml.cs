@@ -20,7 +20,11 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Text;
 using Windows.UI;
 using System.Reflection;
+using Windows.Globalization.Fonts;
 using MetroPad.Model;
+using WindowsRuntimeComponent1;
+
+
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -32,7 +36,7 @@ namespace MetroPad
     public sealed partial class MainView : MetroPad.Common.LayoutAwarePage
     {
         private string _BaseText;
-
+        
         public List<int> Integers = new List<int>();
 
 
@@ -279,41 +283,15 @@ namespace MetroPad
 
         private void _FontColour()
         {
-            TextEditor.Document.Selection.CharacterFormat.ForegroundColor = Colors.Red;
+            TextEditor.Document.Selection.CharacterFormat.ForegroundColor = Colors.Black;
         }
 
         private void _FontSelection()
         {
-            TextEditor.FontFamily = new FontFamily("Times New Roman");
-        }
-
-
-        private static void _LoadColors()
-        {
+            TextEditor.FontFamily = new FontFamily("Segoe UI");           
+        } 
             
-
-            var t = typeof(Colors);
-            var ti = t.GetTypeInfo();
-            var dp = ti.DeclaredProperties;
-            _Colors = new List<PropertyInfo>();
-
-            foreach (var item in dp)
-            {
-                _Colors.Add(item);
-            }
-        }
-
-        private static List<PropertyInfo> _Colors;
-
-        public List<PropertyInfo> Colors1
-        {
-            get
-            {
-                if (_Colors == null)
-                    _LoadColors();
-                return _Colors;
-            }
-        }
+                     
 
         private void FontSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -322,11 +300,7 @@ namespace MetroPad
                 return;
             }
 
-            try
-            {
-                TextEditor.FontFamily = new FontFamily(e.AddedItems[0] as string);
-            }
-            catch { }
+            TextEditor.FontFamily = new FontFamily((e.AddedItems[0] as FontSelection).Name);  
         }
 
 

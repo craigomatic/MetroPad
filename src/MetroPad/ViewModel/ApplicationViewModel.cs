@@ -4,10 +4,12 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Windows.UI.Xaml.Media;
 using MetroPad.Common;
 using MetroPad.Input;
 using Windows.UI;
 using MetroPad.Model;
+using WindowsRuntimeComponent1;
 
 namespace MetroPad.ViewModel
 {
@@ -49,7 +51,7 @@ namespace MetroPad.ViewModel
 
         public ObservableCollection<DocumentViewModel> Documents { get; private set; }
 
-        public IList<string> SystemFonts { get; private set; }
+        public IList<FontSelection> SystemFonts { get; private set; }
 
         public IList<FontColour> SystemColours { get; private set; }
 
@@ -132,7 +134,24 @@ namespace MetroPad.ViewModel
         public ApplicationViewModel()
         {
             //TODO: remove the hardcode, replace with something that gets the system fonts
-            this.SystemFonts = new List<string> { "Segoe UI", "Times New Roman", "Arial", "Verdana", "Helvetica", "Courier New" };
+            // Instantiating and Calling a WindowsRuntimeComponent in C++ from a C# project
+            var nativeobject = new WindowsRuntimeComponent1.Class1();
+            int familycount = nativeobject.getFontFamilyCount();
+
+            // var list = nativeobject.getSystemFonts();
+           
+            var list = new List<string>() { "Segoe UI", "Times New Roman", "Arial", "Comic Sans MS", "Verdana", "Helvetica", "Courier New","Lucida Sans Unicode","Lucida Console" };
+            this.SystemFonts = new List<FontSelection>();
+
+            for(int i=0;i<9;i++)
+            {
+                this.SystemFonts.Add(new FontSelection
+                {
+                    Name = list[i],
+                    Value = new FontFamily(list[i])
+                });
+            }
+
             this.SystemColours = new List<FontColour>();
 
             var ti = typeof(Colors).GetTypeInfo();
