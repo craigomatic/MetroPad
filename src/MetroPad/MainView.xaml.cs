@@ -258,68 +258,37 @@ namespace MetroPad
 
         private void _BoldText()
         {
-            try
-            {
-                ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
-                format.Bold = FormatEffect.Toggle;
-            }
-            catch(UnauthorizedAccessException e){
-                var dialog = new Windows.UI.Popups.MessageDialog(e.Message+"\nClick on Edit before editing the document");
-                dialog.ShowAsync();
-            }
+            ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
+            format.Bold = FormatEffect.Toggle;
         }
 
         private void _ItalicizeText()
         {
-            try
-            {
-                ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
-                format.Italic = FormatEffect.Toggle;
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                var dialog = new Windows.UI.Popups.MessageDialog(e.Message+"\nClick on Edit before editing the document");
-                dialog.ShowAsync();
-            }
+            ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
+            format.Italic = FormatEffect.Toggle;
         }
 
         private void _UnderlineText()
         {
-            try
+            ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
+            if (format.Underline == UnderlineType.None)
             {
-                ITextCharacterFormat format = TextEditor.Document.Selection.CharacterFormat;
-                if (format.Underline == UnderlineType.None)
-                {
-                    format.Underline = UnderlineType.Single;
-                }
-                else
-                {
-                    format.Underline = UnderlineType.None;
-                }
+                format.Underline = UnderlineType.Single;
             }
-            catch (UnauthorizedAccessException e)
+            else
             {
-                var dialog = new Windows.UI.Popups.MessageDialog(e.Message+"\nClick on Edit before editing the document");
-                dialog.ShowAsync();
+                format.Underline = UnderlineType.None;
             }
         }
 
         private void _FontColour()
         {
-            try
-            {
-                TextEditor.Document.Selection.CharacterFormat.ForegroundColor = Colors.Black;
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                var dialog = new Windows.UI.Popups.MessageDialog(e.Message+"\nClick on Edit before editing the document");
-                dialog.ShowAsync();
-            }
+            TextEditor.Document.Selection.CharacterFormat.ForegroundColor = Colors.Black;
         }
 
         private void _FontSelection()
         {
-            TextEditor.FontFamily = new FontFamily("Segoe UI");
+            TextEditor.FontFamily = new FontFamily("Segoe UI");           
         } 
             
                      
@@ -331,15 +300,7 @@ namespace MetroPad
                 return;
             }
 
-            try
-            {
-                 TextEditor.FontFamily = new FontFamily((e.AddedItems[0] as FontSelection).Name);                               
-            }
-            catch (UnauthorizedAccessException Ex)
-            {
-                var dialog = new Windows.UI.Popups.MessageDialog(Ex.Message+"\nClick on Edit before editing the document");
-                dialog.ShowAsync();
-            }
+            TextEditor.FontFamily = new FontFamily((e.AddedItems[0] as FontSelection).Name);  
         }
 
 
@@ -350,15 +311,7 @@ namespace MetroPad
                 return;
             }
 
-            try
-            {
-                TextEditor.Document.Selection.CharacterFormat.ForegroundColor = (e.AddedItems[0] as FontColour).Value;
-            }
-            catch (UnauthorizedAccessException Ex)
-            {
-                var dialog = new Windows.UI.Popups.MessageDialog(Ex.Message+"\nClick on Edit before editing the document");
-                dialog.ShowAsync();
-            }
+            TextEditor.Document.Selection.CharacterFormat.ForegroundColor = (e.AddedItems[0] as FontColour).Value;
         }
     }
 }

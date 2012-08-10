@@ -128,7 +128,7 @@
             </Grid.RowDefinitions>
 
 
-            <RichEditBox x:Name="TextEditor"  TextChanged="TextEditor_TextChanged" IsReadOnly="{Binding Path=SelectedDocument.IsEditing, Converter={StaticResource InverseBooleanConverter}}" FontFamily="Segoe UI" Foreground="Black"/>
+            <RichEditBox x:Name="TextEditor"  TextChanged="TextEditor_TextChanged" IsReadOnly="{Binding Path=SelectedDocument.IsEditing, Converter={StaticResource InverseBooleanConverter}}" IsEnabled="{Binding Path=SelectedDocument.IsEditing}"  FontFamily="Segoe UI" Foreground="Black"/>
 
             <Border Grid.Row="1" Background="Black" Margin="0,10,0,-10">
                 <TextBlock x:Name="tblock" Text="{Binding Path=StatusText}" Foreground="White" Margin="12,5"/>
